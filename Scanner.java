@@ -3,8 +3,9 @@
 //  * Assignment:               Assignment1
 //   * Name:                    Juyong Kim  
 //    * Student Number:         c3244203
-//     * Purpose:               Scans the language
-//      * Note:                 Just SCANS doesn't do syntactic processing
+//     * Purpose:               the lexical analyzer converts a sequence of characters into a sequence of 
+//      *                       distinct keywords, identifiers, constants, and delimiters.
+//       * Note:                Just SCANS doesn't do syntactic processing
 
 import java.io.*;
 import java.util.*;
@@ -14,12 +15,49 @@ public class Scanner
     private boolean EOF;    //end of file
     private int CP, CR;     //current position, current row
 
+    private enum State
+    {
+        LESSTHAN,
+
+    }
+
     //constructor
     public Scanner()
     {
         this.EOF = false;
         this.CP = 0;
         this.CR = 1;
+    }
+
+    public Token nextToken() throws IOException
+    {
+        Token foundToken = null;
+        String buffer = "";
+        
+
+        while(foundToken == null)
+        {
+            switch()
+            {
+    
+            }
+        }
+
+        return foundToken;
+    }
+
+    //Used For Debugging purposes and to check
+
+    //Check for all valid char in the CD18
+    private boolean isValidChar(char c)
+    {
+        System.out.println(" isWhiteSpace || isDigit || isLetter || isValidSymbol ");
+        return Character.isWhitespace(c) || Character.isDigit(c) || Character.isLetter(c) || isValidSymbol(c);
+    }
+    //Check for all valid sym in the CD18
+    private boolean isValidSymbol(char c)
+    {
+        return ";[],()=+-*/%^<>\":.!".indexOf(c) >= 0;
     }
 }
 
