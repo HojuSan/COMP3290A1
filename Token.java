@@ -1,29 +1,3 @@
-//* File:                       Scanner.java
-// * Course:                    COMP2240
-//  * Assignment:               Assignment1
-//   * Name:                    Juyong Kim  
-//    * Student Number:         c3244203
-//     * Purpose:               Scans the language
-//      * Note:                 Just SCANS doesn't do syntactic processing
-
-import java.io.*;
-import java.util.*;
-
-public class Scanner
-{
-    private boolean EOF;    //end of file
-    private int CP, CR;     //current position, current row
-
-    //constructor
-    public Scanner()
-    {
-        this.EOF = false;
-        this.CP = 0;
-        this.CR = 1;
-    }
-}
-
-/* 
 // COMP3290 CD19 Compiler
 //
 //	Token class	- constructs a token on behalf of the scanner for it to be sent to the parser.
@@ -199,5 +173,3 @@ public class Token {
 		return -1;		// not a Keyword
 	}
 }
-
-*/
