@@ -1,3 +1,11 @@
+//* File:                       Token.java
+// * Course:                    COMP2240
+//  * Assignment:               Assignment1
+//   * Name:                    Juyong Kim  
+//    * Student Number:         c3244203
+//     * Purpose:               Premade token list
+//      * Note:                 Look Below
+
 // COMP3290 CD19 Compiler
 //
 //	Token class	- constructs a token on behalf of the scanner for it to be sent to the parser.
@@ -20,66 +28,67 @@ public class Token {
 
 	public static final int
 
-			TEOF  =  0,	  // Token value for end of file
+		TEOF  =  0,	  									// Token value for end of file
 
 		// The 30 keywords
 
-			TCD19 =  1,	TCONS = 2,	TTYPS = 3,	TIS = 4,	TARRS = 5,	TMAIN = 6,
-			TBEGN =  7,	TEND  = 8,	TARAY = 9,	TOF = 10,	TFUNC = 11,	TVOID = 12,
-			TCNST = 13,	TINTG = 14,	TREAL = 15,	TBOOL = 16,	TFOR  = 17,	TREPT = 18,
-			TUNTL = 19,	TIFTH = 20,	TELSE = 21,	TINPT = 22,	TPRIN = 23,	TPRLN = 24,
-			TRETN = 25,	TNOT  = 26,	TAND  = 27,	TOR = 28,	TXOR  = 29,	TTRUE = 30,
-			TFALS = 31,
+		TCD19 =  1,	TCONS = 2,	TTYPS = 3,	TIS = 4,	TARRS = 5,	TMAIN = 6,
+		TBEGN =  7,	TEND  = 8,	TARAY = 9,	TOF = 10,	TFUNC = 11,	TVOID = 12,
+		TCNST = 13,	TINTG = 14,	TREAL = 15,	TBOOL = 16,	TFOR  = 17,	TREPT = 18,
+		TUNTL = 19,	TIFTH = 20,	TELSE = 21,	TINPT = 22,	TPRIN = 23,	TPRLN = 24,
+		TRETN = 25,	TNOT  = 26,	TAND  = 27,	TOR = 28,	TXOR  = 29,	TTRUE = 30,
+		TFALS = 31,
 
 		// the operators and delimiters
-					    TCOMA = 32,	TLBRK = 33,	TRBRK = 34,	TLPAR = 35,	TRPAR = 36,
-			TEQUL = 37,	TPLUS = 38,	TMINS = 39,	TSTAR = 40,	TDIVD = 41,	TPERC = 42,
-			TCART = 43,	TLESS = 44,	TGRTR = 45,	TCOLN = 46,	TLEQL = 47,	TGEQL = 48,
-			TNEQL = 49,	TEQEQ = 50,	TPLEQ = 51,	TMNEQ = 52,	TSTEQ = 53,	TDVEQ = 54,
-			TPCEQ = 55,	TSEMI = 56,	TDOT = 57,
+		TCOMA = 32,	TLBRK = 33,	TRBRK = 34,	TLPAR = 35,	TRPAR = 36,
+		TEQUL = 37,	TPLUS = 38,	TMINS = 39,	TSTAR = 40,	TDIVD = 41,	TPERC = 42,
+		TCART = 43,	TLESS = 44,	TGRTR = 45,	TCOLN = 46,	TLEQL = 47,	TGEQL = 48,
+		TNEQL = 49,	TEQEQ = 50,	TPLEQ = 51,	TMNEQ = 52,	TSTEQ = 53,	TDVEQ = 54,
+		TPCEQ = 55,	TSEMI = 56,	TDOT = 57,
 
 		// the tokens which need tuple values
 
-			TIDEN = 58,	TILIT = 59,	TFLIT = 60,	TSTRG = 61,	TUNDF = 62;
+		TIDEN = 58,	TILIT = 59,	TFLIT = 60,	TSTRG = 61,	TUNDF = 62;
 
 
-	private static final String TPRINT[] = {  //  TPRINT[tokenValue] will produce the associated String
-								//  e.g. TPRINT[TMAIN] will be the String "TMAIN ".
-			"TEOF  ",
-			"TCD19 ",	"TCONS ",	"TTYPS ",	"TIS   ",	"TARRS ",	"TMAIN ",
-			"TBEGN ",	"TEND  ",	"TARAY ",	"TOF   ",	"TFUNC ",	"TVOID ",
-			"TCNST ",	"TINTG ",	"TREAL ",	"TBOOL ",	"TFOR  ",	"TREPT ",
-			"TUNTL ",	"TIFTH ",	"TELSE ",	"TINPT ",	"TPRIN ",	"TPRLN ",
-			"TRETN ",	"TNOT  ",	"TAND  ",	"TOR   ",	"TXOR  ",	"TTRUE ",
-			"TFALS ",	"TCOMA ",	"TLBRK ",	"TRBRK ",	"TLPAR ",	"TRPAR ",
-			"TEQUL ",	"TPLUS ",	"TMINS ",	"TSTAR ",	"TDIVD ",	"TPERC ",
-			"TCART ",	"TLESS ",	"TGRTR ",	"TCOLN ",	"TLEQL ",	"TGEQL ",
-			"TNEQL ",	"TEQEQ ",	"TPLEQ ",	"TMNEQ ",	"TSTEQ ",	"TDVEQ ",
-			"TPCEQ ",	"TSEMI ",	"TDOT  ",
+	private static final String TPRINT[] = {  			//  TPRINT[tokenValue] will produce the associated String
+														//  e.g. TPRINT[TMAIN] will be the String "TMAIN ".
+		"TEOF  ",
+		"TCD19 ",	"TCONS ",	"TTYPS ",	"TIS   ",	"TARRS ",	"TMAIN ",
+		"TBEGN ",	"TEND  ",	"TARAY ",	"TOF   ",	"TFUNC ",	"TVOID ",
+		"TCNST ",	"TINTG ",	"TREAL ",	"TBOOL ",	"TFOR  ",	"TREPT ",
+		"TUNTL ",	"TIFTH ",	"TELSE ",	"TINPT ",	"TPRIN ",	"TPRLN ",
+		"TRETN ",	"TNOT  ",	"TAND  ",	"TOR   ",	"TXOR  ",	"TTRUE ",
+		"TFALS ",	"TCOMA ",	"TLBRK ",	"TRBRK ",	"TLPAR ",	"TRPAR ",
+		"TEQUL ",	"TPLUS ",	"TMINS ",	"TSTAR ",	"TDIVD ",	"TPERC ",
+		"TCART ",	"TLESS ",	"TGRTR ",	"TCOLN ",	"TLEQL ",	"TGEQL ",
+		"TNEQL ",	"TEQEQ ",	"TPLEQ ",	"TMNEQ ",	"TSTEQ ",	"TDVEQ ",
+		"TPCEQ ",	"TSEMI ",	"TDOT  ",
 
-			"TIDEN ",	"TILIT ",	"TFLIT ",	"TSTRG ",	"TUNDF "};
+		"TIDEN ",	"TILIT ",	"TFLIT ",	"TSTRG ",	"TUNDF "};
 
 
-	private int tid;	// token number - for token classification
-	private int line;	// line number on listing
-	private int pos;	// character position within line
-	private String str;	// lexeme - actual character string from scanner for TIDEN/TILIT/TFLIT/TSTRG
-	private StRec symbol;	// symbol table entry - set by Parser in Part 3 - not used in Part 1
-						// This does require a "stub" class for StRec, however........
+	private int tid;									// token number - for token classification
+	private int line;									// line number on listing
+	private int pos;									// character position within line
+	private String str;									// lexeme - actual character string from scanner for TIDEN/TILIT/TFLIT/TSTRG
+	private StRec symbol;								// symbol table entry - set by Parser in Part 3 - not used in Part 1
+														// This does require a "stub" class for StRec, however........
 
-	public Token(int t, int ln, int p, String s) {  //Constructor takes in token number, line, column & lexeme
+	public Token(int t, int ln, int p, String s) 		//Constructor takes in token number, line, column & lexeme
+	{  
 		tid = t;
 		line = ln;
 		pos = p;
-		str = s;		// This string is expected to be non-empty only if lexeme has been recognised
-						//   as an ID, Integer or Real Literal, String Literal, or an Error (TUNDF).
-						// For all other tokens the lexeme has already supplied all information
-						//   necessary and so is expected to be passed in as an empty string.
-		if (tid == TIDEN) {				// Identifier lexeme could be a reserved keyword
-			int v = checkKeywords(s);		// 	(match is case-insensitive)
-			if (v > 0) { tid = v; str = null; }	// if keyword, alter token type and set lexeme to null
+		str = s;										// This string is expected to be non-empty only if lexeme has been recognised
+														//   as an ID, Integer or Real Literal, String Literal, or an Error (TUNDF).
+														// For all other tokens the lexeme has already supplied all information
+														//   necessary and so is expected to be passed in as an empty string.
+		if (tid == TIDEN) {								// Identifier lexeme could be a reserved keyword
+			int v = checkKeywords(s);					// 	(match is case-insensitive)
+			if (v > 0) { tid = v; str = null; }			// if keyword, alter token type and set lexeme to null
 		}
-		symbol = null;	// initially null, SymTab lookup is done by Parser for TIDEN/TILIT/TFLIT/TSTRG
+		symbol = null;									// initially null, SymTab lookup is done by Parser for TIDEN/TILIT/TFLIT/TSTRG
 	}
 
 	public int value() { return tid; }
@@ -94,14 +103,16 @@ public class Token {
 
 	public void setSymbol(StRec x) {symbol = x; }		// Used by the Parser to set the ST Ref field of the Token tuple
 
-	public String toString() {				// This does NOT produce output for the Scanner Phase	   *****
+	public String toString() 							// This does NOT produce output for the Scanner Phase	   *****
+	{				
 		String s = TPRINT[tid]+" " + line + " " + pos;	// It is meant to be used for diagnostic printing only	   *****
-		if (str == null) return s;			// It may give you some ideas wrt reporting lexical errors *****
+		if (str == null) return s;						// It may give you some ideas wrt reporting lexical errors *****
 		if (tid != TUNDF)
 			s += " " + str;
 		else {
 			s += " ";
-			for (int i=0; i<str.length(); i++) { // output non-printables as ascii codes
+			for (int i=0; i<str.length(); i++) 			// output non-printables as ascii codes
+			{ 
 				char ch = str.charAt(i);
 				int j = (int)ch;
 				if (j <= 31 || j >= 127) s += "\\" +j; else s += ch;
