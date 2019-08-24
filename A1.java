@@ -18,8 +18,16 @@ public class A1
 		StringBuffer sb = new StringBuffer("");							//a string that can be modified
 		BufferedReader br = new BufferedReader(new FileReader(file));	//read char by char
 		OutputController output = new OutputController(br, pw, sb);
+		Scanner scan = new Scanner(output);
+
+		Token temp;
 		
 		//currently not sure how things will print
+		for(int i = 0; i < 10; i++)
+		{
+			scan.nextToken();
+		}
+
 		System.out.println();
 		pw.close();
 	}

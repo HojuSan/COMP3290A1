@@ -72,7 +72,7 @@ public class Token {
 	private int line;									// line number on listing
 	private int pos;									// character position within line
 	private String str;									// lexeme - actual character string from scanner for TIDEN/TILIT/TFLIT/TSTRG
-	private StRec symbol;								// symbol table entry - set by Parser in Part 3 - not used in Part 1
+	//private StRec symbol;								// symbol table entry - set by Parser in Part 3 - not used in Part 1
 														// This does require a "stub" class for StRec, however........
 
 	public Token(int t, int ln, int p, String s) 		//Constructor takes in token number, line, column & lexeme
@@ -88,7 +88,7 @@ public class Token {
 			int v = checkKeywords(s);					// 	(match is case-insensitive)
 			if (v > 0) { tid = v; str = null; }			// if keyword, alter token type and set lexeme to null
 		}
-		symbol = null;									// initially null, SymTab lookup is done by Parser for TIDEN/TILIT/TFLIT/TSTRG
+		//symbol = null;									// initially null, SymTab lookup is done by Parser for TIDEN/TILIT/TFLIT/TSTRG
 	}
 
 	public int value() { return tid; }
@@ -99,9 +99,9 @@ public class Token {
 
 	public String getStr() { return str; }
 
-	public StRec getSymbol() { return symbol; }
+	//public StRec getSymbol() { return symbol; }
 
-	public void setSymbol(StRec x) {symbol = x; }		// Used by the Parser to set the ST Ref field of the Token tuple
+	//public void setSymbol(StRec x) {symbol = x; }		// Used by the Parser to set the ST Ref field of the Token tuple
 
 	public String toString() 							// This does NOT produce output for the Scanner Phase	   *****
 	{				

@@ -12,11 +12,92 @@ import java.util.*;
 
 public class OutputController
 {
+    private BufferedReader inputStream;				//Text file reader	
+    private PrintWriter listing = null;				//Currently not 100% sure how this thing works
+	private StringBuffer errors = null;             //uses this to show errors
+	private String currentLine;						//current line
+	private String errorLine;
+	private int line;                               //line
+	private int charPos;                            //character position
+	private int errorCount;                         //error counter
 
+	//Constructor
+	public OutputController(BufferedReader source, PrintWriter listing, StringBuffer errors)
+	{
+        //setting inside variables
+		this.inputStream = source;
+		this.listing = listing;
+        this.errors = errors;
+        //set everything to zero, cause we ain't heathens that start at 1
+		currentLine = "  0: ";
+		errorLine = "";
+		line = 0;
+		charPos = 0;
+        errorCount = 0;
+        //testing
+        System.out.println("Yeet");
+	}
 
-    //constructor
-    public OutputController()
-    {
+	//Read char by char from text file
+	public int readChar() throws IOException
+	{
+		int c = inputStream.read();
+		
+		if ((char)c == '\n')
+		{
+			listing.println(currentLine);
+            line++;
+            
+			if (line < 10) 
+			{
+				currentLine = "  " + line + ": ";
+			}
+			else if (line < 100)
+			{
+				currentLine = " " + line + ": ";
+			}
+			else
+			{
+				currentLine = line+": ";
+			}
+			charPos = 0;					//when new line reset char position
+		}
+		else
+		{
+			currentLine += "" + (char)c;
+			charPos++;
+		}
 
-    }
+		return c;
+	}
+
+	public void mark(int g) throws IOException
+	{
+		inputStream.mark(g);
+	}
+
+	public void reset() throws IOException
+	{
+		inputStream.reset();
+	}
+
+	public int getErrorCount()
+	{
+		return errorCount;
+	}
+
+	public void setError(String msg) 			
+	{				
+		if (!errorLine.equals("")) 
+		{
+			errorLine += "\n";	// terminate line for previous error message
+		}
+		errorLine += msg;
+		errorCount++;
+		listing.println(errorLine);
+		errors.append(currentLine + "\n");
+		errors.append(errorLine + "\n");	// put error messages for this line into text area
+		errorLine = "";				// reset error message string
+	}
+
 }
