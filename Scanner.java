@@ -238,7 +238,8 @@ public class Scanner
 						buffer += c;
 						currentState = State.COMMENT;
 					}
-					else
+!!!!!!!!!!!!!!!!!!
+					else								//if it doesn't have the extra dash its an error
 					{
 						finished = true;
 						output.reset();
