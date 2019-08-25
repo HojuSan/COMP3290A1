@@ -17,6 +17,7 @@ public class Scanner
 	private OutputController output;	//outputcontroller
 	private boolean prevFlag = false; 	//flag to see if token is finished or not
 	private char prevChar = 'k';		//currently saved character
+	private boolean finished = false;
 	
 	private boolean debug = true;
 	//reserved words to not use
@@ -45,16 +46,13 @@ public class Scanner
 		System.out.println("scanner");
     }
 
-	//public Token nextToken() throws IOException
 	public void nextToken() throws IOException
     {
-		System.out.println("inside next token");
         Token foundToken = null;
 		String buffer = "";
 		State currentState = State.START;
-        
 
-        while(foundToken == null)
+		while(foundToken == null)
         {
             char c;
             //if a token needs to be finished off
@@ -67,7 +65,8 @@ public class Scanner
             //or start on next lexeme
             else
             {
-				System.out.println("state2");
+//repeats since it has no other switch statement to go into
+				System.out.println("state2, cp is at "+CP);
                 CP++;									//start new position
                 c = (char)output.readChar();	//get new character from outputcontroller
             }
@@ -83,11 +82,14 @@ public class Scanner
             switch(currentState)
             {
 				//testing just numbers and chars
+//incomplete
 				case START:
 				System.out.println("inside switch statement start");
 				if(Character.isWhitespace(c))
 				{
-					//DoNothing
+					//At 4 am in the morning, my mind is as blank
+					//as this whitespace character
+					//which does nothing but be empty and do nothing
 				}
 				else if (Character.isDigit(c)) 
 				{
@@ -112,15 +114,47 @@ public class Scanner
 				}
 				break;
 
+				//Identifier
+//finished?
 				case IDENT:
+					if (Character.isDigit(c) || Character.isLetter(c)) //check if valid character
+					{
+						buffer += c;
+					}
+					else 											   //tokenise and continue work
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TIDEN, CR, CP, buffer);	//tuple token
+						buffer = "";
+					}
 				break; 
-				case ERROR:
-				break;
-				case STRING:
-				break;
+//Finished
 				case INTLIT:
+                    if (Character.isDigit(c))			//remains in current state, adds to buffer
+                    {
+                        buffer += c;
+                    }
+                    else if (c == '.' && !finished)		//Move onto integer followed by dot state
+                    {
+                        currentState = State.INTDOT;
+                        buffer += c;
+                    }
+                    else                                //create token but return back to this to finish it
+                    {
+                        finished = false;				//its not finished yet
+                        prevFlag = true;				//set previous flag
+                        prevChar = c;					//set the previous character
+                        currentState = State.START;		//return to start
+                        foundToken = new Token(Token.TILIT, CR, CP, buffer);		//create a token of type tuple
+                        buffer = "";
+                    }
 				break;
 				case INTDOT:
+				break;
+
+				case STRING:
 				break;
 				case FLOLIT:
 				break;
@@ -146,6 +180,20 @@ public class Scanner
 				break;
 				case COMMENT:
 				break;
+				case ERROR:
+					if (!isValidChar(c) && !((byte)c == -1)) 
+					{
+						buffer += c;
+					}
+					else
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TUNDF, CR, CP, buffer);
+						buffer = "";											//reset buffer
+					}
+				break;
             }
         }
 
@@ -163,7 +211,7 @@ public class Scanner
 
     //Used For Debugging purposes and to check
 
-    //Check for all valid char in the CD18
+    //Check for all valid char within the CD18 language
     private boolean isValidChar(char c)
     {
         System.out.println(" isWhiteSpace || isDigit || isLetter || isValidSymbol ");

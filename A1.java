@@ -23,7 +23,7 @@ public class A1
 		Token temp;
 		
 		//currently not sure how things will print
-		for(int i = 0; i < 10; i++)
+		while(true != scan.isEOF())
 		{
 			scan.nextToken();
 		}
