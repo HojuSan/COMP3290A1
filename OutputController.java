@@ -34,8 +34,6 @@ public class OutputController
 		line = 0;
 		charPos = 0;
         errorCount = 0;
-        //testing
-        System.out.println("Yeet");
 	}
 
 	//Read char by char from text file
@@ -58,16 +56,28 @@ public class OutputController
 			}
 			else
 			{
-				currentLine = line+": ";
+				currentLine = line + ": ";
 			}
 			charPos = 0;					//when new line reset char position
+		}
+		else if ((byte) c == -1)
+		{
+			if (errorCount != 0)
+			{
+				listing.println(currentLine);
+				listing.println("Errors found: " + errorCount);
+			}
+			else
+			{
+				listing.println(currentLine);
+				listing.println("Scanner has finished");
+			}		
 		}
 		else
 		{
 			currentLine += "" + (char)c;
 			charPos++;
 		}
-
 		return c;
 	}
 

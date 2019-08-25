@@ -19,7 +19,7 @@ public class Scanner
 	private char prevChar = 'k';		//currently saved character
 	private boolean finished = false;
 	
-	private boolean debug = true;
+	private boolean debug = false;//true;		//	if(debug == true){
 	//reserved words to not use
 	/* 
 	CD19 constants types is arrays main begin end array of func 
@@ -43,7 +43,7 @@ public class Scanner
         this.EOF = false;		//when made its currently not at the end of file yet
         this.CP = 0;			//current position is 0
 		this.CR = 0;			//current row is 0
-		System.out.println("scanner");
+		if(debug == true){System.out.println("scanner");}
     }
 
 	public void nextToken() throws IOException
@@ -58,7 +58,7 @@ public class Scanner
             //if a token needs to be finished off
             if (prevFlag)
             {
-				System.out.println("state 1");
+				if(debug == true){System.out.println("state 1");}
                 c = prevChar;
                 prevFlag = false;
             }
@@ -66,14 +66,14 @@ public class Scanner
             else
             {
 //repeats since it has no other switch statement to go into
-				System.out.println("state2, cp is at "+CP);
+				if(debug == true){System.out.println("state2, cp is at "+CP);}
                 CP++;									//start new position
                 c = (char)output.readChar();	//get new character from outputcontroller
             }
             //when its a newline reset coutners
             if(c == '\n')
             {
-				System.out.println("state3");
+				if(debug == true){System.out.println("state3");}
                 CR++;
                 CP = 0;
 			}
@@ -84,7 +84,7 @@ public class Scanner
 				//testing just numbers and chars
 //incomplete
 				case START:
-				System.out.println("inside switch statement start");
+				if(debug == true){System.out.println("inside switch statement start");}
 				if(Character.isWhitespace(c))
 				{
 					//At 4 am in the morning, my mind is as blank
@@ -197,8 +197,8 @@ public class Scanner
             }
         }
 
-		foundToken.toString();
-		System.out.println("just after foundtoken print");
+		System.out.println(foundToken.toString());
+		if(debug == true){System.out.println("end of a loop");}
         //return foundToken;
     }
 

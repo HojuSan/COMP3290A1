@@ -27,8 +27,7 @@ public class A1
 		{
 			scan.nextToken();
 		}
-
-		System.out.println();
-		pw.close();
+		System.out.println("boop");
+		pw.close();														//prints/flushes the rest out
 	}
 }
