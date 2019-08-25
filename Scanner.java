@@ -62,13 +62,13 @@ public class Scanner
                 c = prevChar;
                 prevFlag = false;
             }
-            //or start on next lexeme
+            //or start on next token
             else
             {
 //repeats since it has no other switch statement to go into
 				if(debug == true){System.out.println("state2, cp is at "+CP);}
                 CP++;									//start new position
-                c = (char)output.readChar();	//get new character from outputcontroller
+                c = (char)output.readChar();			//get new character from outputcontroller
             }
             //when its a newline reset coutners
             if(c == '\n')
@@ -78,31 +78,100 @@ public class Scanner
                 CP = 0;
 			}
 			
-			//State machine starts here
+			//FINITE STATEMACHINE
             switch(currentState)
             {
 				//testing just numbers and chars
 //incomplete
 				case START:
 				if(debug == true){System.out.println("inside switch statement start");}
-				if(Character.isWhitespace(c))
+				//ripped directly from token class, not to be confused with state
+				//for single symbols just create a token
+				else if (isValidSymbol(c))
+				{
+					if (c=='^') foundToken = new Token(Token.TCART, CR, CP, null);
+					if (c=='(') foundToken = new Token(Token.TLPAR, CR, CP, null);
+					if (c==')') foundToken = new Token(Token.TRPAR, CR, CP, null);
+					if (c=='[') foundToken = new Token(Token.TLBRK, CR, CP, null);
+					if (c==']') foundToken = new Token(Token.TRBRK, CR, CP, null);
+					if (c==',') foundToken = new Token(Token.TCOMA, CR, CP, null);
+					if (c=='.') foundToken = new Token(Token.TDOT, CR, CP, null);
+					if (c==';') foundToken = new Token(Token.TSEMI, CR, CP, null);
+					if (c==':') foundToken = new Token(Token.TCOLN, CR, CP, null);
+				}
+				//
+				if(Character.isWhitespace(c))			//white spaces
 				{
 					//At 4 am in the morning, my mind is as blank
 					//as this whitespace character
 					//which does nothing but be empty and do nothing
 				}
-				else if (Character.isDigit(c)) 
+				else if (Character.isDigit(c)) 			//DIGIT-Mons
 				{
 					currentState = State.INTLIT;
 					buffer += c;
 				}
-				else if (Character.isLetter(c))
+				else if (Character.isLetter(c))			//Alpahbets
 				{
 					currentState = State.IDENT;
 					buffer += c;
 				}
+
+				//Operations
+				else if (c == '+') 					//plus
+				{
+					currentState = State.PLUSEQL;
+					buffer += c;
+				}
+				else if (c == '-') 					//minus
+				{
+					currentState = State.MINEQL;
+					buffer += c;
+				}
+				else if (c == '*') 					//multiplication
+				{
+					currentState = State.MULTEQL;
+					buffer += c;
+				}
+				else if (c == '/') 					//divison
+				{
+					output.mark(4);
+					currentState = State.SLASH;
+					buffer += c;
+				}
+				else if (c == '%') 					//percentage
+				{
+					currentState = State.PEREQL;
+					buffer += c;
+				}
+				else if (c == '\"')					//string
+				{
+					currentState = State.STRING;
+					buffer += c;
+				}
+				else if (c == '!')					//exclamation
+				{
+					currentState = State.NEQL;
+					buffer += c;
+				}
+				else if (c == '=') 					//equal sign
+				{
+					currentState = State.EQL;
+					buffer += c;
+				} 
+				else if (c == '<') 					//less than
+				{
+					currentState = State.LEQL;
+					buffer += c;
+				} 
+				else if (c == '>') 					//greater than
+				{
+					currentState = State.GEQL;
+					buffer += c;
+				}
+
 				//converting char c to EOF value into token
-				else if ((byte)c == -1)
+				else if ((byte)c == -1)					//Reached end of file
 				{
 					EOF = true;
 					foundToken = new Token(Token.TEOF, CP, CR, null);
