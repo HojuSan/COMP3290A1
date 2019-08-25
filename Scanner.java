@@ -6,6 +6,8 @@
 //     * Purpose:               the lexical analyzer converts a sequence of characters into a sequence of 
 //      *                       distinct keywords, identifiers, constants, and delimiters.
 //       * Note:                Just SCANS doesn't do syntactic processing
+//		  *						In computer science, an integer literal is a kind of literal for an integer 
+//		   *					whose value is directly represented in source code.
 
 import java.io.*;
 import java.util.*;
@@ -136,6 +138,7 @@ public class Scanner
 				else if (c == '/') 					//divison
 				{
 					output.mark(4);
+					System.out.println("inside start for slash");
 					currentState = State.SLASH;
 					buffer += c;
 				}
@@ -184,7 +187,6 @@ public class Scanner
 				break;
 
 				//Identifier
-//finished?
 				case IDENT:
 					if (Character.isDigit(c) || Character.isLetter(c)) //check if valid character
 					{
@@ -199,7 +201,66 @@ public class Scanner
 						buffer = "";
 					}
 				break; 
-//Finished
+
+				//Special case Scenarios
+				case SLASH:
+					// /= slash equals
+					if(c == '=')		//WORKS!!!!!
+					{
+						System.out.println("entered =");
+						currentState = State.START;
+						buffer = "";					//empty the buffer
+						foundToken = new Token(Token.TDVEQ, CR, CP, null);
+					}
+					// /-	slash dash, probably becomes a comment
+					else if(c == '-' && !finished)	//this scenario transfers into SLASHDASH, probably a comment
+					{
+						System.out.println("here1");
+						buffer += c;				//add it to the buffer
+						currentState = State.SLASHDASH;
+					}
+					else
+					{
+						finished = false;
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TDIVD, CR, CP, null);
+                        buffer = "";				//clear buffer
+					}
+				break;
+
+				// /-
+				case SLASHDASH: 
+					if (c == '-') 						// if the next char is also a - its a comment
+					{
+						System.out.println("here2");
+						buffer += c;
+						currentState = State.COMMENT;
+					}
+					else
+					{
+						finished = true;
+						output.reset();
+						currentState = State.SLASH;
+						c = buffer.charAt(0);
+						buffer = "";
+						buffer+=c;
+					}
+				break;
+
+                //Comments
+				case COMMENT:	//ignores everything till new line or eof
+					//\n is new line, \r is carriage return -1 is eof
+					System.out.println("here");
+                    if (c == '\n' || c == '\r' || ((byte)c == -1))
+                    {
+                        buffer = "";
+                        currentState = State.START;
+                    }
+				break;
+					
+				//Integer literal
 				case INTLIT:
                     if (Character.isDigit(c))			//remains in current state, adds to buffer
                     {
@@ -241,14 +302,10 @@ public class Scanner
 				break;
 				case MULTEQL:
 				break;
-				case SLASH:
-				break;
 				case PEREQL: 
 				break;
-				case SLASHDASH: 
-				break;
-				case COMMENT:
-				break;
+
+				//error cases go to output controller
 				case ERROR:
 					if (!isValidChar(c) && !((byte)c == -1)) 
 					{

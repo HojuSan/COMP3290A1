@@ -33,7 +33,9 @@ public class OutputController
 		errorLine = "";
 		line = 0;
 		charPos = 0;
-        errorCount = 0;
+		errorCount = 0;
+		System.out.println("[ID]   l p");	//for readable purposes
+		System.out.println();
 	}
 
 	//Read char by char from text file
