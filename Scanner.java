@@ -229,7 +229,7 @@ public class Scanner
                         buffer = "";				//clear buffer
 					}
 				break;
-
+////////////////////
 				// /-
 				case SLASHDASH: 
 					if (c == '-') 						// if the next char is also a - its a comment
@@ -238,7 +238,6 @@ public class Scanner
 						buffer += c;
 						currentState = State.COMMENT;
 					}
-!!!!!!!!!!!!!!!!!!
 					else								//if it doesn't have the extra dash its an error
 					{
 						finished = true;
@@ -275,8 +274,8 @@ public class Scanner
                     else                                //create token but return back to this to finish it
                     {
                         finished = false;				//its not finished yet
-                        prevFlag = true;				//set previous flag
-                        prevChar = c;					//set the previous character
+                        prevFlag = true;				//set prevFlag flag
+                        prevChar = c;					//set the prevFlag character
                         currentState = State.START;		//return to start
                         foundToken = new Token(Token.TILIT, CR, CP, buffer);		//create a token of type tuple
                         buffer = "";
@@ -289,21 +288,147 @@ public class Scanner
 				break;
 				case FLOLIT:
 				break;
-				case LEQL:
-				break;
-				case GEQL:
-				break;
-				case NEQL:
-				break;
+
+				// == equals
 				case EQL:
+					if (c == '=') 		//if the prevFlag character also was =, becomes an ==
+					{
+						currentState = State.START;
+						buffer = "";
+						foundToken = new Token(Token.TEQEQ, CR, CP, null);
+					}
+					else				//else becomes a regular equal sign
+					{
+						prevFlag= true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TEQUL, CR, CP, null);
+						buffer = "";
+					}				
 				break;
+
+				//<= less than or equal to
+				case LEQL:
+					if (c == '=') 		//if currently equal becomes <=
+					{
+						currentState = State.START;
+						buffer = "";
+						foundToken = new Token(Token.TLEQL, CR, CP, null);
+					}
+					else				//if not just a regular < sign
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TLESS, CR, CP, null);
+						buffer = "";
+					}
+				break;
+
+				//>= greater than or equal to		
+				case GEQL:
+					if (c == '=') 		//if equal sign greater or equal to
+					{
+						currentState = State.START;
+						buffer = "";
+						foundToken = new Token(Token.TGEQL, CR, CP, null);
+					}
+					else				//else just greater than
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TGRTR, CR, CP, null);
+						buffer = "";
+					}
+				break;
+
+				//!= not equal
+				case NEQL:
+					if (c == '=') 		//if equal !=
+					{
+						currentState = State.START;
+						buffer = "";
+						foundToken = new Token(Token.TNEQL, CR, CP, null);
+					}
+					else 				//else just a regular !
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.ERROR;
+					}
+				break;
+
+				//+= add and equal
 				case PLUSEQL:
+					if (c == '=') 		//if = then +=
+					{
+						currentState = State.START;
+						buffer = "";
+						foundToken = new Token(Token.TPLEQ, CR, CP, null);
+					}
+					else				//else just a regular +
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TPLUS, CR, CP, null);
+						buffer = "";
+					}
 				break;
+
+				//-= minus then equal
 				case MINEQL:
+					if (c == '=') 		//if = then -=
+					{
+						currentState = State.START;
+						buffer = "";
+						foundToken = new Token(Token.TMNEQ, CR, CP, null);
+					}
+					else				//else just a regular -
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TMINS, CR, CP, null);
+						buffer = "";
+					}
 				break;
+
+				//*= multiple then equal to
 				case MULTEQL:
+					if (c == '=') 		//if = then *=
+					{
+						currentState = State.START;
+						buffer = "";
+						foundToken = new Token(Token.TSTEQ, CR, CP, null);
+					}
+					else				//else just a regular *
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TSTAR, CR, CP, null);
+						buffer = "";
+					}
 				break;
+
+				//%= percentage equal
 				case PEREQL: 
+					if (c == '=') 	//if = then %=
+					{
+						currentState = State.START;
+						buffer = "";
+						foundToken = new Token(Token.TPCEQ, CR, CP, null);
+					}
+					else			//else just a regular %
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TPERC, CR, CP, null);
+						buffer = "";
+					}
 				break;
 
 				//error cases go to output controller
@@ -341,7 +466,7 @@ public class Scanner
     //Check for all valid char within the CD18 language
     private boolean isValidChar(char c)
     {
-        System.out.println(" isWhiteSpace || isDigit || isLetter || isValidSymbol ");
+        //System.out.println(" isWhiteSpace || isDigit || isLetter || isValidSymbol ");
         return Character.isWhitespace(c) || Character.isDigit(c) || Character.isLetter(c) || isValidSymbol(c);
     }
     //Check for all valid sym in the CD18
