@@ -4,8 +4,13 @@
 //   * Name:                    Juyong Kim  
 //    * Student Number:         c3244203
 //     * Purpose:               Main file
-//      * Note:                 very minimum is done here
-
+//      * Note:                 syntactic processing is not done in this assignment
+//		 *						spaces are delimiters, also /n and /r(carrigage return)
+//		  *						
+//		   *
+//		    *
+//		     *
+//		      *
 import java.io.*;
 import java.util.*;
 

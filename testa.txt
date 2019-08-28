@@ -1,1 +1,9 @@
 /-- at least one that fails syntactically (but succeeds lexically);
+
+MAIN
+ARRAY
+
+== = = ==
+=3
+
+!

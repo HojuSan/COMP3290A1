@@ -14,14 +14,14 @@ import java.util.*;
 
 public class Scanner
 {
-    private boolean EOF;    //end of file
-	private int CP, CR;     //current position, current row
+    private boolean EOF;    			//end of file
+	private int CP, CR;     			//current position, current row
 	private OutputController output;	//outputcontroller
 	private boolean prevFlag = false; 	//flag to see if token is finished or not
 	private char prevChar = 'k';		//currently saved character
 	private boolean finished = false;
 	
-	private boolean debug = false;//true;		//	if(debug == true){
+	private boolean debug = false;//true;		//if(debug == true){
 	//reserved words to not use
 	/* 
 	CD19 constants types is arrays main begin end array of func 
@@ -124,7 +124,7 @@ public class Scanner
 					currentState = State.PLUSEQL;
 					buffer += c;
 				}
-				else if (c == '-') 					//minus
+				else if (c == '-') 					//minus, includes special cases such as neg integers
 				{
 					currentState = State.MINEQL;
 					buffer += c;
@@ -243,7 +243,7 @@ public class Scanner
 					{
 						buffer += c;
 					}
-					else
+					else			//if you don't know what it is set it as undefined for now
 					{
 						prevFlag = true;
 						prevChar = c;
@@ -325,6 +325,7 @@ public class Scanner
 						currentState = State.START;
 						buffer = "";
 						foundToken = new Token(Token.TEQEQ, CR, CP, null);
+						output.setError("eql sign error");
 					}
 					else				//else becomes a regular equal sign
 					{
@@ -499,6 +500,7 @@ public class Scanner
 					else								//if it doesn't have the extra dash its an error
 					{
 						finished = true;
+						output.setError("comment is missing a dash sign!!");
 						output.reset();
 						currentState = State.SLASH;
 						c = buffer.charAt(0);
