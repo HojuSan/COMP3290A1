@@ -112,7 +112,7 @@ public class Scanner
 				}
 				else if (Character.isDigit(c)) 			//DIGIT-Mons
 				{
-					System.out.println("is digit->going to INTLIT");
+					//System.out.println("is digit->going to INTLIT");
 					currentState = State.INTLIT;
 					buffer += c;
 				}
@@ -300,6 +300,7 @@ public class Scanner
 						buffer = buffer.substring(0, buffer.length()-1);
 						//System.out.println("after buffer is "+buffer+" c is "+c);
 						foundToken = new Token(Token.TILIT, CR, CP, buffer);
+						tokenNum++;
 						buffer = "";
 						debugPrint(foundToken);
 						foundToken = new Token(Token.TDOT, CR, CP, buffer);
@@ -427,6 +428,7 @@ public class Scanner
 					{
 						prevFlag = true;
 						prevChar = c;
+						//System.out.println("---------------------character is "+c);
 						currentState = State.START;
 						foundToken = new Token(Token.TMINS, CR, CP, null);
 						buffer = "";
@@ -479,12 +481,11 @@ public class Scanner
 					// /-	slash dash, probably becomes a comment
 					else if(c == '-' && !finished)	//this scenario transfers into SLASHDASH, probably a comment
 					{
-						buffer += c;				//add it to the buffer
 						currentState = State.SLASHDASH;
+						buffer += c;				//add it to the buffer
 					}
 					else
 					{
-						finished = false;
 						prevFlag = true;
 						prevChar = c;
 						currentState = State.START;
@@ -500,9 +501,34 @@ public class Scanner
 						buffer += c;
 						currentState = State.COMMENT;
 					}
+					//make it into -= instead
+					else if(c == '=')
+					{
+						currentState = State.START;		//return to start
+						buffer = buffer.substring(0, buffer.length()-1);
+						foundToken = new Token(Token.TDIVD, CR, CP, null);
+						tokenNum++;
+						buffer = "";
+						debugPrint(foundToken);
+						buffer = "";
+						foundToken = new Token(Token.TMNEQ, CR, CP, null);
+						buffer = "";
+					}
 					else								//if it doesn't have the extra dash its an error
 					{
-						currentState = State.ERROR;
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;		//return to start
+						//System.out.println("buffer is "+buffer+" c is "+c);
+						buffer = buffer.substring(0, buffer.length()-1);
+						//System.out.println("after buffer is "+buffer+" c is "+c);
+						foundToken = new Token(Token.TDIVD, CR, CP, null);
+						tokenNum++;
+						buffer = "";
+						debugPrint(foundToken);
+						//System.out.println("---------------------inside slash dash character is "+c);
+						foundToken = new Token(Token.TMINS, CR, CP, null);
+						buffer = "";
 					}
 				break;
             }
