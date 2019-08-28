@@ -103,6 +103,23 @@ public class Token {
 
 	//public void setSymbol(StRec x) {symbol = x; }		// Used by the Parser to set the ST Ref field of the Token tuple
 
+	public String debugString()
+	{				
+		String s = TPRINT[tid];	// It is meant to be used for diagnostic printing only	   *****
+		if (str == null) return s;						// It may give you some ideas wrt reporting lexical errors *****
+		if (tid != TUNDF)
+			s += " " + str;
+		else {
+			s += " ";
+			for (int i=0; i<str.length(); i++) 			// output non-printables as ascii codes
+			{ 
+				char ch = str.charAt(i);
+				int j = (int)ch;
+				if (j <= 31 || j >= 127) s += "\\" +j; else s += ch;
+			}
+		}
+		return s;
+	}
 	public String toString() 							// This does NOT produce output for the Scanner Phase	   *****
 	{				
 		String s = TPRINT[tid]+" " + line + " " + pos;	// It is meant to be used for diagnostic printing only	   *****

@@ -109,6 +109,7 @@ public class Scanner
 				}
 				else if (Character.isDigit(c)) 			//DIGIT-Mons
 				{
+					output.mark(20);
 					currentState = State.INTLIT;
 					buffer += c;
 				}
@@ -136,8 +137,7 @@ public class Scanner
 				}
 				else if (c == '/') 					//divison
 				{
-					output.mark(4);
-					System.out.println("inside start for slash");
+					output.mark(20);
 					currentState = State.SLASH;
 					buffer += c;
 				}
@@ -213,6 +213,7 @@ public class Scanner
                     //If delimeters exist then lexical error
                     else if (c == '\n' || c == '\r' || ((byte)c == -1))
                     {
+						//output.setError("!!string is not complete");
                         currentState = State.ERROR;
                     } 
                     //Else tokenize
@@ -229,7 +230,6 @@ public class Scanner
                 //Comments
 				case COMMENT:	//ignores everything till new line or eof
 					//\n is new line, \r is carriage return -1 is eof
-					//System.out.println("here");
                     if (c == '\n' || c == '\r' || ((byte)c == -1))
                     {
                         buffer = "";
@@ -264,8 +264,7 @@ public class Scanner
 						currentState = State.INTDOT;
 						buffer += c;
 					}
-		//currently debugging
-					else if (c == '.')		
+					else if (!Character.isDigit(c) && !finished)		//Move onto integer followed by dot state
 					{
 						currentState = State.ERROR;
 					}
@@ -289,6 +288,7 @@ public class Scanner
 					}
 					else						//else set finished
 					{
+						//output.setError("!!FLOAT LITERAL is not complete");
 						finished = true;
 						output.reset();
 						currentState = State.START;
@@ -325,7 +325,6 @@ public class Scanner
 						currentState = State.START;
 						buffer = "";
 						foundToken = new Token(Token.TEQEQ, CR, CP, null);
-						output.setError("eql sign error");
 					}
 					else				//else becomes a regular equal sign
 					{
@@ -466,7 +465,6 @@ public class Scanner
 					// /= slash equals
 					if(c == '=')		//WORKS!!!!!
 					{
-						System.out.println("entered =");
 						currentState = State.START;
 						buffer = "";					//empty the buffer
 						foundToken = new Token(Token.TDVEQ, CR, CP, null);
@@ -474,7 +472,6 @@ public class Scanner
 					// /-	slash dash, probably becomes a comment
 					else if(c == '-' && !finished)	//this scenario transfers into SLASHDASH, probably a comment
 					{
-						System.out.println("here1");
 						buffer += c;				//add it to the buffer
 						currentState = State.SLASHDASH;
 					}
@@ -493,16 +490,15 @@ public class Scanner
 				case SLASHDASH: 
 					if (c == '-') 						// if the next char is also a - its a comment
 					{
-						System.out.println("here2");
 						buffer += c;
 						currentState = State.COMMENT;
 					}
 					else								//if it doesn't have the extra dash its an error
 					{
+						//output.setError("!!comment is missing a dash sign");
 						finished = true;
-						output.setError("comment is missing a dash sign!!");
 						output.reset();
-						currentState = State.SLASH;
+						currentState = State.START;
 						c = buffer.charAt(0);
 						buffer = "";
 						buffer+=c;
@@ -511,7 +507,7 @@ public class Scanner
             }
         }
 
-		System.out.println(foundToken.toString());
+		System.out.println(foundToken.debugString());
 		if(debug == true){System.out.println("end of a loop");}
         //return foundToken;
     }

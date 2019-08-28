@@ -34,7 +34,6 @@ public class OutputController
 		line = 0;
 		charPos = 0;
 		errorCount = 0;
-		System.out.println("[ID]   l p");	//for readable purposes
 		System.out.println();
 	}
 
@@ -83,14 +82,16 @@ public class OutputController
 		return c;
 	}
 
-	public void mark(int g) throws IOException
-	{
-		inputStream.mark(g);
-	}
-
+	//when errors occur reset the stream to continue lexical analysis
 	public void reset() throws IOException
 	{
 		inputStream.reset();
+	}
+
+	//marks the location, will probably need it during parsing
+	public void mark(int g) throws IOException
+	{
+		inputStream.mark(g);
 	}
 
 	public int getErrorCount()
@@ -102,14 +103,14 @@ public class OutputController
 	{				
 		if (!errorLine.equals("")) 
 		{
-			errorLine += "\n";	// terminate line for previous error message
+			errorLine += "\n";				// terminate line for previous error message
 		}
 		errorLine += msg;
 		errorCount++;
-		listing.println(errorLine);
+		listing.println(errorLine);			//print the error above
 		errors.append(currentLine + "\n");
-		errors.append(errorLine + "\n");	// put error messages for this line into text area
-		errorLine = "";				// reset error message string
+		errors.append(errorLine + "\n");
+		errorLine = "";						// reset error message
 	}
 
 }
