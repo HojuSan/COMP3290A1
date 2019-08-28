@@ -83,8 +83,7 @@ public class Scanner
 			//FINITE STATEMACHINE
             switch(currentState)
             {
-				//testing just numbers and chars
-//incomplete
+			//Start, leads tokens to appropriate statements
 				case START:
 				if(debug == true){System.out.println("inside switch statement start");}
 				//ripped directly from token class, not to be confused with state
@@ -186,6 +185,8 @@ public class Scanner
 				}
 				break;
 
+			//Variable settings
+
 				//Identifier
 				case IDENT:
 					if (Character.isDigit(c) || Character.isLetter(c)) //check if valid character
@@ -202,92 +203,120 @@ public class Scanner
 					}
 				break; 
 
-				//Special case Scenarios
-				case SLASH:
-					// /= slash equals
-					if(c == '=')		//WORKS!!!!!
-					{
-						System.out.println("entered =");
-						currentState = State.START;
-						buffer = "";					//empty the buffer
-						foundToken = new Token(Token.TDVEQ, CR, CP, null);
-					}
-					// /-	slash dash, probably becomes a comment
-					else if(c == '-' && !finished)	//this scenario transfers into SLASHDASH, probably a comment
-					{
-						System.out.println("here1");
-						buffer += c;				//add it to the buffer
-						currentState = State.SLASHDASH;
-					}
-					else
-					{
-						finished = false;
-						prevFlag = true;
-						prevChar = c;
-						currentState = State.START;
-						foundToken = new Token(Token.TDIVD, CR, CP, null);
-                        buffer = "";				//clear buffer
-					}
-				break;
-////////////////////
-				// /-
-				case SLASHDASH: 
-					if (c == '-') 						// if the next char is also a - its a comment
-					{
-						System.out.println("here2");
-						buffer += c;
-						currentState = State.COMMENT;
-					}
-					else								//if it doesn't have the extra dash its an error
-					{
-						finished = true;
-						output.reset();
-						currentState = State.SLASH;
-						c = buffer.charAt(0);
-						buffer = "";
-						buffer+=c;
-					}
+				//String
+				case STRING:
+                    //Check for new line delimeters and add character
+                    if (c != '\"' && !((byte)c == -1) && c != '\n' && c != '\r') 
+                    {
+                        buffer += c;
+                    }
+                    //If delimeters exist then lexical error
+                    else if (c == '\n' || c == '\r' || ((byte)c == -1))
+                    {
+                        currentState = State.ERROR;
+                    } 
+                    //Else tokenize
+                    else if (c == '\"') 
+                    {
+                        currentState = State.START;
+                        //Remove initial quotation mark from the string buffer
+                        buffer = buffer.substring(1);
+                        foundToken = new Token(Token.TSTRG, CR, CP, buffer);
+                        buffer = "";
+                    }
 				break;
 
                 //Comments
 				case COMMENT:	//ignores everything till new line or eof
 					//\n is new line, \r is carriage return -1 is eof
-					System.out.println("here");
+					//System.out.println("here");
                     if (c == '\n' || c == '\r' || ((byte)c == -1))
                     {
                         buffer = "";
                         currentState = State.START;
                     }
 				break;
-					
-				//Integer literal
-				case INTLIT:
-                    if (Character.isDigit(c))			//remains in current state, adds to buffer
-                    {
-                        buffer += c;
-                    }
-                    else if (c == '.' && !finished)		//Move onto integer followed by dot state
-                    {
-                        currentState = State.INTDOT;
-                        buffer += c;
-                    }
-                    else                                //create token but return back to this to finish it
-                    {
-                        finished = false;				//its not finished yet
-                        prevFlag = true;				//set prevFlag flag
-                        prevChar = c;					//set the prevFlag character
-                        currentState = State.START;		//return to start
-                        foundToken = new Token(Token.TILIT, CR, CP, buffer);		//create a token of type tuple
-                        buffer = "";
-                    }
-				break;
-				case INTDOT:
+
+				//error cases go to output controller
+				case ERROR:
+					if (!isValidChar(c) && !((byte)c == -1)) 
+					{
+						buffer += c;
+					}
+					else
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TUNDF, CR, CP, buffer);
+						buffer = "";											//reset buffer
+					}
 				break;
 
-				case STRING:
+				//Integer literal
+				case INTLIT:
+					if (Character.isDigit(c))			//remains in current state, adds to buffer
+					{
+						buffer += c;
+					}
+					else if (c == '.' && !finished)		//Move onto integer followed by dot state
+					{
+						currentState = State.INTDOT;
+						buffer += c;
+					}
+		//currently debugging
+					else if (c == '.')		
+					{
+						currentState = State.ERROR;
+					}
+					else                                //create token but return back to this to finish it
+					{
+						finished = false;				//its not finished yet
+						prevFlag = true;				//set prevFlag flag
+						prevChar = c;					//set the prevFlag character
+						currentState = State.START;		//return to start
+						foundToken = new Token(Token.TILIT, CR, CP, buffer);		//create a token of type tuple
+						buffer = "";
+					}
 				break;
+
+				//integer with a  dot
+				case INTDOT:
+					if (Character.isDigit(c))	//creates the digit and sets it into a float
+					{
+						currentState = State.FLOLIT;
+						buffer += c;
+					}
+					else						//else set finished
+					{
+						finished = true;
+						output.reset();
+						currentState = State.START;
+						c = buffer.charAt(0);
+						buffer = "";
+						buffer+=c;
+					}
+				break;
+
+				//float literal
 				case FLOLIT:
+					//adds number and remains in state
+					if (Character.isDigit(c))
+					{
+						buffer += c;
+					}
+					//else	create a token and continue
+					else
+					{
+						prevFlag = true;
+						prevChar = c;
+						currentState = State.START;
+						foundToken = new Token(Token.TFLIT, CR, CP, buffer);
+						buffer = "";
+					}
 				break;
+
+			//Something and equals
 
 				// == equals
 				case EQL:
@@ -431,19 +460,50 @@ public class Scanner
 					}
 				break;
 
-				//error cases go to output controller
-				case ERROR:
-					if (!isValidChar(c) && !((byte)c == -1)) 
+				//Special case Scenarios
+				case SLASH:
+					// /= slash equals
+					if(c == '=')		//WORKS!!!!!
 					{
-						buffer += c;
+						System.out.println("entered =");
+						currentState = State.START;
+						buffer = "";					//empty the buffer
+						foundToken = new Token(Token.TDVEQ, CR, CP, null);
+					}
+					// /-	slash dash, probably becomes a comment
+					else if(c == '-' && !finished)	//this scenario transfers into SLASHDASH, probably a comment
+					{
+						System.out.println("here1");
+						buffer += c;				//add it to the buffer
+						currentState = State.SLASHDASH;
 					}
 					else
 					{
+						finished = false;
 						prevFlag = true;
 						prevChar = c;
 						currentState = State.START;
-						foundToken = new Token(Token.TUNDF, CR, CP, buffer);
-						buffer = "";											//reset buffer
+						foundToken = new Token(Token.TDIVD, CR, CP, null);
+                        buffer = "";				//clear buffer
+					}
+				break;
+////////////////////
+				// /-
+				case SLASHDASH: 
+					if (c == '-') 						// if the next char is also a - its a comment
+					{
+						System.out.println("here2");
+						buffer += c;
+						currentState = State.COMMENT;
+					}
+					else								//if it doesn't have the extra dash its an error
+					{
+						finished = true;
+						output.reset();
+						currentState = State.SLASH;
+						c = buffer.charAt(0);
+						buffer = "";
+						buffer+=c;
 					}
 				break;
             }

@@ -1,0 +1,6 @@
+
+/--e) Write a program in CD19 that will compute the area of a polygon from a set of (x, y)
+Cartesian points. (1)
+The program should have functions to (i) input the number of points (up to 20) and the
+points themselves, and (ii) compute the area of the polygon.
+The main program should be used to output the result.
