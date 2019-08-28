@@ -20,6 +20,8 @@ public class Scanner
 	private boolean prevFlag = false; 	//flag to see if token is finished or not
 	private char prevChar = 'k';		//currently saved character
 	private boolean finished = false;
+	private String outputLimit = "";
+	private int tokenNum = 0;
 	
 	private boolean debug = false;//true;		//if(debug == true){
 	//reserved words to not use
@@ -50,6 +52,7 @@ public class Scanner
 
 	public void nextToken() throws IOException
     {
+		boolean prevError = false;
         Token foundToken = null;
 		String buffer = "";
 		State currentState = State.START;
@@ -58,7 +61,7 @@ public class Scanner
         {
             char c;
             //if a token needs to be finished off
-            if (prevFlag)
+            if(prevFlag)
             {
 				if(debug == true){System.out.println("state 1");}
                 c = prevChar;
@@ -109,7 +112,7 @@ public class Scanner
 				}
 				else if (Character.isDigit(c)) 			//DIGIT-Mons
 				{
-					output.mark(20);
+					System.out.println("is digit->going to INTLIT");
 					currentState = State.INTLIT;
 					buffer += c;
 				}
@@ -189,7 +192,7 @@ public class Scanner
 
 				//Identifier
 				case IDENT:
-					if (Character.isDigit(c) || Character.isLetter(c)) //check if valid character
+					if (Character.isDigit(c) || Character.isLetter(c) || isUnderScore(c)) //check if valid character
 					{
 						buffer += c;
 					}
@@ -238,6 +241,7 @@ public class Scanner
 				break;
 
 				//error cases go to output controller
+				//edge case of !!!!= should be 2, 1, 4 tokens?
 				case ERROR:
 					if (!isValidChar(c) && !((byte)c == -1)) 
 					{
@@ -247,9 +251,10 @@ public class Scanner
 					{
 						prevFlag = true;
 						prevChar = c;
+						prevError = true;
 						currentState = State.START;
 						foundToken = new Token(Token.TUNDF, CR, CP, buffer);
-						buffer = "";											//reset buffer
+						buffer = "";			
 					}
 				break;
 
@@ -258,19 +263,17 @@ public class Scanner
 					if (Character.isDigit(c))			//remains in current state, adds to buffer
 					{
 						buffer += c;
+						//System.out.println("Donk111111!!!!!!!!!!!!!!!!!!");
 					}
 					else if (c == '.' && !finished)		//Move onto integer followed by dot state
 					{
 						currentState = State.INTDOT;
 						buffer += c;
-					}
-					else if (!Character.isDigit(c) && !finished)		//Move onto integer followed by dot state
-					{
-						currentState = State.ERROR;
+						//System.out.println("Donk22222!!!!!!!!!!!!!!!!!!");
 					}
 					else                                //create token but return back to this to finish it
 					{
-						finished = false;				//its not finished yet
+						//System.out.println("Donk!!!!!!!!!!!!!!!!!! buffer"+c+" finished == true here");
 						prevFlag = true;				//set prevFlag flag
 						prevChar = c;					//set the prevFlag character
 						currentState = State.START;		//return to start
@@ -283,18 +286,24 @@ public class Scanner
 				case INTDOT:
 					if (Character.isDigit(c))	//creates the digit and sets it into a float
 					{
+						//System.out.println("Sponk!!!!!!!!!!!!!!!!!!");
 						currentState = State.FLOLIT;
 						buffer += c;
 					}
 					else						//else set finished
 					{
-						//output.setError("!!FLOAT LITERAL is not complete");
-						finished = true;
-						output.reset();
-						currentState = State.START;
-						c = buffer.charAt(0);
+						prevFlag = true;				//set prevFlag flag
+						prevChar = c;					//set the prevFlag character
+						//System.out.println("buffer is "+buffer+" c is "+c);
+						currentState = State.START;		//return to start
+
+						buffer = buffer.substring(0, buffer.length()-1);
+						//System.out.println("after buffer is "+buffer+" c is "+c);
+						foundToken = new Token(Token.TILIT, CR, CP, buffer);
 						buffer = "";
-						buffer+=c;
+						debugPrint(foundToken);
+						foundToken = new Token(Token.TDOT, CR, CP, buffer);
+						buffer = "";
 					}
 				break;
 
@@ -444,20 +453,18 @@ public class Scanner
 
 				//%= percentage equal
 				case PEREQL: 
-					if (c == '=') 	//if = then %=
-					{
-						currentState = State.START;
-						buffer = "";
-						foundToken = new Token(Token.TPCEQ, CR, CP, null);
-					}
-					else			//else just a regular %
-					{
+//					if (c == '=') 	//if = then %=
+//					{
+//						currentState = State.START;
+//						buffer = "";
+//						foundToken = new Token(Token.TPCEQ, CR, CP, null);
+//					}
+								//else just a regular %
 						prevFlag = true;
 						prevChar = c;
 						currentState = State.START;
 						foundToken = new Token(Token.TPERC, CR, CP, null);
 						buffer = "";
-					}
 				break;
 
 				//Special case Scenarios
@@ -495,28 +502,64 @@ public class Scanner
 					}
 					else								//if it doesn't have the extra dash its an error
 					{
-						//output.setError("!!comment is missing a dash sign");
-						finished = true;
-						output.reset();
-						currentState = State.START;
-						c = buffer.charAt(0);
-						buffer = "";
-						buffer+=c;
+						currentState = State.ERROR;
 					}
 				break;
             }
         }
 
-		System.out.println(foundToken.debugString());
+		//concatenate string
+//		outputLimit += (foundToken.debugString() +" ");
+//
+//		//printout format
+//		if(foundToken.value() == 62 && prevError == true)
+//		{
+//			System.out.println("TUNDF" +" ");
+//			System.out.println("lexical error "+foundToken.getStr());
+//			outputLimit = "";
+//		}
+//		else if(foundToken.value() == 62)
+//		{
+//			//System.out.println();
+//			System.out.println("\nTUNDF" +" ");
+//			System.out.println("lexical error "+foundToken.getStr());
+//			outputLimit = "";
+//		}
+//		else if(66 > outputLimit.length())
+//		{
+//			System.out.print(foundToken.debugString() +" ");//+outputLimit.length());
+//			prevError = false;
+//
+//		}
+//		else
+//		{
+//			System.out.println(foundToken.debugString() +" ");
+//			//reset the strings
+//			outputLimit = "";	
+//			prevError = false;
+//		}
+
+		debugPrint(foundToken);
+
+		tokenNum++;
 		if(debug == true){System.out.println("end of a loop");}
         //return foundToken;
-    }
+	}
+	
+	public void debugPrint(Token temp)
+	{
+		System.out.println(temp.toString() +" ");
+	}
 
 	//getters
 	//end of file check
 	public boolean isEOF()
 	{
 		return EOF;
+	}
+	public int getTokenNum()
+	{
+		return tokenNum;
 	}
 
     //Used For Debugging purposes and to check
@@ -530,6 +573,15 @@ public class Scanner
     //Check for all valid sym in the CD18
     private boolean isValidSymbol(char c)
     {
-        return ";[],()=+-*/%^<>\":.!".indexOf(c) >= 0;
-    }
+        return ";[],()=+-*/%^<>\":.!".indexOf(c) >= 0;		//not sure if 
+	}
+	//check for underscore
+	private boolean isUnderScore(char c)
+	{
+		if(c =='_')
+		{
+			return true;
+		}
+		return false;
+	}
 }

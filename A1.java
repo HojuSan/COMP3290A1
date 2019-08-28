@@ -4,12 +4,12 @@
 //   * Name:                    Juyong Kim  
 //    * Student Number:         c3244203
 //     * Purpose:               Main file
-//      * Note:                 syntactic processing is not done in this assignment
-//		 *						spaces are delimiters, also /n and /r(carrigage return)
-//		  *						
-//		   *
-//		    *
-//		     *
+//      * Note:                 -syntactic processing is not done in this assignment
+//		 *						-spaces are delimiters, also /n and /r(carrigage return)
+//		  *						-7. Other significant lexical items in CD19 are: semicolon (;) leftbracket ([)
+//		   *					rightbracket (]) comma (,) leftparen ( ( ) rightparen ( ) ) equals (=) plus (+)
+//		    *					minus (-) star (*) slash (/) percent (%) carat (^) less (<) greater (>) exclamation
+//		     *					(!) quote (“) colon (:) dot (.).
 //		      *
 import java.io.*;
 import java.util.*;
@@ -32,7 +32,9 @@ public class A1
 		{
 			scan.nextToken();
 		}
-		System.out.println("boop");
+		
+		System.out.println("token num " + scan.getTokenNum());
+		System.out.println();
 		pw.close();														//prints/flushes the rest out
 	}
 }
