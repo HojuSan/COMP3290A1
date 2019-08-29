@@ -1,9 +1,10 @@
 /-- at least one that fails syntactically (but succeeds lexically);
+/--pretty self explanitory
 
-MAIN
-ARRAY
+HelloWorld CD19
 
-== = = ==
-=3
+boolean i main
 
-!
+; "HelloWorld" printline
+
+CD19 HelloWorld end
