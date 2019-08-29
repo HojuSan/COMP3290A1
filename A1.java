@@ -35,6 +35,6 @@ public class A1
 		
 		System.out.println("token num " + scan.getTokenNum());
 		System.out.println();
-		pw.close();														//prints/flushes the rest out
+		//pw.close();														//prints/flushes the rest out
 	}
 }

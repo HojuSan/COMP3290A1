@@ -247,7 +247,7 @@ public class Scanner
 					if(isExclamation(prevChar) && isEqual(c))					//edge case !!!!= finds the !=
 					{
 							
-						System.out.println("buffer is "+buffer+" c is "+c);
+						//System.out.println("buffer is "+buffer+" c is "+c);
 						currentState = State.START;		//return to start
 
 						buffer = buffer.substring(0, buffer.length()-1);		//-1 to remove the ! to make the !=
@@ -255,7 +255,7 @@ public class Scanner
 						foundToken = new Token(Token.TUNDF, CR, CP, buffer);	//create the undefined
 						tokenNum++;
 						buffer = "";
-						debugPrint(foundToken);
+						debugPrint(foundToken, prevError);
 						foundToken = new Token(Token.TNEQL, CR, CP, buffer);	//create the not equals
 						buffer = "";
 					}
@@ -319,7 +319,7 @@ public class Scanner
 						foundToken = new Token(Token.TILIT, CR, CP, buffer);
 						tokenNum++;
 						buffer = "";
-						debugPrint(foundToken);
+						debugPrint(foundToken, prevError);
 						foundToken = new Token(Token.TDOT, CR, CP, buffer);
 						buffer = "";
 					}
@@ -526,7 +526,7 @@ public class Scanner
 						foundToken = new Token(Token.TDIVD, CR, CP, null);
 						tokenNum++;
 						buffer = "";
-						debugPrint(foundToken);
+						debugPrint(foundToken, prevError);
 						buffer = "";
 						foundToken = new Token(Token.TMNEQ, CR, CP, null);
 						buffer = "";
@@ -542,7 +542,7 @@ public class Scanner
 						foundToken = new Token(Token.TDIVD, CR, CP, null);
 						tokenNum++;
 						buffer = "";
-						debugPrint(foundToken);
+						debugPrint(foundToken, prevError);
 						//System.out.println("---------------------inside slash dash character is "+c);
 						foundToken = new Token(Token.TMINS, CR, CP, null);
 						buffer = "";
@@ -552,46 +552,50 @@ public class Scanner
         }
 
 		//concatenate string
-//		outputLimit += (foundToken.debugString() +" ");
+		outputLimit += (foundToken.debugString() +" ");
 
 
-		debugPrint(foundToken);
+		debugPrint(foundToken, prevError);
 
 		tokenNum++;
 		if(debug == true){System.out.println("end of a loop");}
         //return foundToken;
 	}
 	
-	public void debugPrint(Token temp)
+	public void debugPrint(Token foundToken, boolean prevError)
 	{
-		System.out.println(temp.toString() +" ");
-//		//printout format
-//		if(foundToken.value() == 62 && prevError == true)
-//		{
-//			System.out.println("TUNDF" +" ");
-//			System.out.println("lexical error "+foundToken.getStr());
-//			outputLimit = "";
-//		}
-//		else if(foundToken.value() == 62)
-//		{
-//			//System.out.println();
-//			System.out.println("\nTUNDF" +" ");
-//			System.out.println("lexical error "+foundToken.getStr());
-//			outputLimit = "";
-//		}
-//		else if(66 > outputLimit.length())
-//		{
-//			System.out.print(foundToken.debugString() +" ");//+outputLimit.length());
-//			prevError = false;
-//
-//		}
-//		else
-//		{
-//			System.out.println(foundToken.debugString() +" ");
-//			//reset the strings
-//			outputLimit = "";	
-//			prevError = false;
-//		}
+//		System.out.println(temp.toString() +" ");
+		//printout format
+		if(foundToken.value() == 62 && prevError == true)
+		{
+			//System.out.print("case1!!!!!");
+			System.out.println("TUNDF" +" ");
+			System.out.println("lexical error "+foundToken.getStr());
+			outputLimit = "";
+		}
+		else if(foundToken.value() == 62)
+		{
+			//System.out.println();
+			//System.out.print("case2!!!!!");
+			System.out.println("\nTUNDF" +" ");
+			System.out.println("lexical error "+foundToken.getStr());
+			outputLimit = "";
+		}
+		else if(66 > outputLimit.length() || 60 >= outputLimit.length())
+		{
+			//System.out.print("case3!!!!!");
+			System.out.print(foundToken.debugString() +" ");//+"outputlimit "+outputLimit);//+outputLimit.length());
+			prevError = false;
+
+		}
+		else
+		{
+			//System.out.print("case4!!!!!");
+			System.out.println(foundToken.debugString() +" ");
+			//reset the strings
+			outputLimit = "";	
+			prevError = false;
+		}
 	}
 
 	//getters
