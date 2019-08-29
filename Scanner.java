@@ -88,104 +88,105 @@ public class Scanner
             {
 			//Start, leads tokens to appropriate statements
 				case START:
-				if(debug == true){System.out.println("inside switch statement start");}
-				//ripped directly from token class, not to be confused with state
-				//for single symbols just create a token
-				else if (isValidSymbol(c))
-				{
-					if (c=='^') foundToken = new Token(Token.TCART, CR, CP, null);
-					if (c=='(') foundToken = new Token(Token.TLPAR, CR, CP, null);
-					if (c==')') foundToken = new Token(Token.TRPAR, CR, CP, null);
-					if (c=='[') foundToken = new Token(Token.TLBRK, CR, CP, null);
-					if (c==']') foundToken = new Token(Token.TRBRK, CR, CP, null);
-					if (c==',') foundToken = new Token(Token.TCOMA, CR, CP, null);
-					if (c=='.') foundToken = new Token(Token.TDOT, CR, CP, null);
-					if (c==';') foundToken = new Token(Token.TSEMI, CR, CP, null);
-					if (c==':') foundToken = new Token(Token.TCOLN, CR, CP, null);
-				}
-				//
-				if(Character.isWhitespace(c))			//white spaces
-				{
-					//At 4 am in the morning, my mind is as blank
-					//as this whitespace character
-					//which does nothing but be empty and do nothing
-				}
-				else if (Character.isDigit(c)) 			//DIGIT-Mons
-				{
-					//System.out.println("is digit->going to INTLIT");
-					currentState = State.INTLIT;
-					buffer += c;
-				}
-				else if (Character.isLetter(c))			//Alpahbets
-				{
-					currentState = State.IDENT;
-					buffer += c;
-				}
+					if(debug == true){System.out.println("inside switch statement start");}
+					//ripped directly from token class, not to be confused with state
+					//for single symbols just create a token
+					else if (isValidSymbol(1, c))
+					{
+						if (c=='^') foundToken = new Token(Token.TCART, CR, CP, null);
+						if (c=='(') foundToken = new Token(Token.TLPAR, CR, CP, null);
+						if (c==')') foundToken = new Token(Token.TRPAR, CR, CP, null);
+						if (c=='[') foundToken = new Token(Token.TLBRK, CR, CP, null);
+						if (c==']') foundToken = new Token(Token.TRBRK, CR, CP, null);
+						if (c==',') foundToken = new Token(Token.TCOMA, CR, CP, null);
+						if (c=='.') foundToken = new Token(Token.TDOT, CR, CP, null);
+						if (c==';') foundToken = new Token(Token.TSEMI, CR, CP, null);
+						if (c==':') foundToken = new Token(Token.TCOLN, CR, CP, null);
+					}
+					//
+					if(Character.isWhitespace(c))			//white spaces
+					{
+						//At 4 am in the morning, my mind is as blank
+						//as this whitespace character
+						//which does nothing but be empty and do nothing
+					}
+					else if (Character.isDigit(c)) 			//DIGIT-Mons
+					{
+						//System.out.println("is digit->going to INTLIT");
+						currentState = State.INTLIT;
+						buffer += c;
+					}
+					else if (Character.isLetter(c))			//Alpahbets
+					{
+						currentState = State.IDENT;
+						buffer += c;
+					}
 
-				//Operations
-				else if (c == '+') 					//plus
-				{
-					currentState = State.PLUSEQL;
-					buffer += c;
-				}
-				else if (c == '-') 					//minus, includes special cases such as neg integers
-				{
-					currentState = State.MINEQL;
-					buffer += c;
-				}
-				else if (c == '*') 					//multiplication
-				{
-					currentState = State.MULTEQL;
-					buffer += c;
-				}
-				else if (c == '/') 					//divison
-				{
-					output.mark(20);
-					currentState = State.SLASH;
-					buffer += c;
-				}
-				else if (c == '%') 					//percentage
-				{
-					currentState = State.PEREQL;
-					buffer += c;
-				}
-				else if (c == '\"')					//string
-				{
-					currentState = State.STRING;
-					buffer += c;
-				}
-				else if (c == '!')					//exclamation
-				{
-					currentState = State.NEQL;
-					buffer += c;
-				}
-				else if (c == '=') 					//equal sign
-				{
-					currentState = State.EQL;
-					buffer += c;
-				} 
-				else if (c == '<') 					//less than
-				{
-					currentState = State.LEQL;
-					buffer += c;
-				} 
-				else if (c == '>') 					//greater than
-				{
-					currentState = State.GEQL;
-					buffer += c;
-				}
+					//Operations
+					else if (c == '+') 					//plus
+					{
+						currentState = State.PLUSEQL;
+						buffer += c;
+					}
+					else if (c == '-') 					//minus, includes special cases such as neg integers
+					{
+						currentState = State.MINEQL;
+						buffer += c;
+					}
+					else if (c == '*') 					//multiplication
+					{
+						currentState = State.MULTEQL;
+						buffer += c;
+					}
+					else if (c == '/') 					//divison
+					{
+						output.mark(20);
+						currentState = State.SLASH;
+						buffer += c;
+					}
+					else if (c == '%') 					//percentage
+					{
+						currentState = State.PEREQL;
+						buffer += c;
+					}
+					else if (c == '\"')					//string
+					{
+						currentState = State.STRING;
+						buffer += c;
+					}
+					else if (c == '!')					//exclamation
+					{
+						currentState = State.NEQL;
+						buffer += c;
+						prevChar = c;					//to see if its != on edge cases
+					}
+					else if (c == '=') 					//equal sign
+					{
+						currentState = State.EQL;
+						buffer += c;
+					} 
+					else if (c == '<') 					//less than
+					{
+						currentState = State.LEQL;
+						buffer += c;
+					} 
+					else if (c == '>') 					//greater than
+					{
+						currentState = State.GEQL;
+						buffer += c;
+					}
 
-				//converting char c to EOF value into token
-				else if ((byte)c == -1)					//Reached end of file
-				{
-					EOF = true;
-					foundToken = new Token(Token.TEOF, CP, CR, null);
-				}
-				else
-				{
-					currentState = State.ERROR;
-					buffer += c;
-				}
+					//converting char c to EOF value into token
+					else if ((byte)c == -1)					//Reached end of file
+					{
+						EOF = true;
+						foundToken = new Token(Token.TEOF, CP, CR, null);
+					}
+					else
+					{
+						currentState = State.ERROR;
+						buffer += c;
+					}
 				break;
 
 			//Variable settings
@@ -243,9 +244,25 @@ public class Scanner
 				//error cases go to output controller
 				//edge case of !!!!= should be 2, 1, 4 tokens?
 				case ERROR:
-					if (!isValidChar(c) && !((byte)c == -1)) 
+					if(isExclamation(prevChar) && isEqual(c))					//edge case !!!!= finds the !=
+					{
+							
+						System.out.println("buffer is "+buffer+" c is "+c);
+						currentState = State.START;		//return to start
+
+						buffer = buffer.substring(0, buffer.length()-1);		//-1 to remove the ! to make the !=
+						//System.out.println("after buffer is "+buffer+" c is "+c);
+						foundToken = new Token(Token.TUNDF, CR, CP, buffer);	//create the undefined
+						tokenNum++;
+						buffer = "";
+						debugPrint(foundToken);
+						foundToken = new Token(Token.TNEQL, CR, CP, buffer);	//create the not equals
+						buffer = "";
+					}
+					else if (!isValidChar(0, c) && !((byte)c == -1)) 
 					{
 						buffer += c;
+						prevChar = c;
 					}
 					else			//if you don't know what it is set it as undefined for now
 					{
@@ -536,7 +553,18 @@ public class Scanner
 
 		//concatenate string
 //		outputLimit += (foundToken.debugString() +" ");
-//
+
+
+		debugPrint(foundToken);
+
+		tokenNum++;
+		if(debug == true){System.out.println("end of a loop");}
+        //return foundToken;
+	}
+	
+	public void debugPrint(Token temp)
+	{
+		System.out.println(temp.toString() +" ");
 //		//printout format
 //		if(foundToken.value() == 62 && prevError == true)
 //		{
@@ -564,17 +592,6 @@ public class Scanner
 //			outputLimit = "";	
 //			prevError = false;
 //		}
-
-		debugPrint(foundToken);
-
-		tokenNum++;
-		if(debug == true){System.out.println("end of a loop");}
-        //return foundToken;
-	}
-	
-	public void debugPrint(Token temp)
-	{
-		System.out.println(temp.toString() +" ");
 	}
 
 	//getters
@@ -591,20 +608,58 @@ public class Scanner
     //Used For Debugging purposes and to check
 
     //Check for all valid char within the CD18 language
-    private boolean isValidChar(char c)
+    private boolean isValidChar(int i, char c)
     {
+		//with the !
+		if(i == 1)
+		{
+			return Character.isWhitespace(c) || Character.isDigit(c) || Character.isLetter(c) || isValidSymbol(1, c);
+		}
+		//without the !
+		else
+		{
+			return Character.isWhitespace(c) || Character.isDigit(c) || Character.isLetter(c) || isValidSymbol(0, c);
+		}
         //System.out.println(" isWhiteSpace || isDigit || isLetter || isValidSymbol ");
-        return Character.isWhitespace(c) || Character.isDigit(c) || Character.isLetter(c) || isValidSymbol(c);
-    }
+	}
     //Check for all valid sym in the CD18
-    private boolean isValidSymbol(char c)
+    private boolean isValidSymbol(int i, char c)
     {
-        return ";[],()=+-*/%^<>\":.!".indexOf(c) >= 0;		//not sure if 
+		//with the !
+		if(i == 1)
+		{
+			return ";[],()=+-*/%^<>\":.!".indexOf(c) >= 0;		//not sure if 
+		}
+		//without the !
+		else
+		{
+			return ";[],()=+-*/%^<>\":.".indexOf(c) >= 0;		//removed the !
+		}
+		
+
 	}
 	//check for underscore
 	private boolean isUnderScore(char c)
 	{
 		if(c =='_')
+		{
+			return true;
+		}
+		return false;
+	}
+	//check for underscore
+	private boolean isExclamation(char c)
+	{
+		if(c =='!')
+		{
+			return true;
+		}
+		return false;
+	}
+	//check for underscore
+	private boolean isEqual(char c)
+	{
+		if(c =='=')
 		{
 			return true;
 		}
