@@ -103,6 +103,20 @@ public class Token {
 
 	//public void setSymbol(StRec x) {symbol = x; }		// Used by the Parser to set the ST Ref field of the Token tuple
 
+	private static String formatString(String str)
+	{
+		String b = "";
+
+		int c = 6-(str.length()%7);
+
+		for (int i=0;i<c;i++)
+		{
+			b+=" ";
+		}
+
+		return str+b;
+	}
+
 	public String debugString()
 	{				
 		String s = TPRINT[tid];	// It is meant to be used for diagnostic printing only	   *****
@@ -118,7 +132,7 @@ public class Token {
 				if (j <= 31 || j >= 127) s += "\\" +j; else s += ch;
 			}
 		}
-		return s;
+		return formatString(s);
 	}
 	public String toString() 							// This does NOT produce output for the Scanner Phase	   *****
 	{				

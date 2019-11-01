@@ -33,7 +33,7 @@ public class A1
 			scan.nextToken();
 		}
 		
-		System.out.println("token num " + scan.getTokenNum());
+		//System.out.println("token num " + scan.getTokenNum());
 		System.out.println();
 		//pw.close();														//prints/flushes the rest out
 	}
