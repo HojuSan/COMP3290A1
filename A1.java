@@ -19,6 +19,7 @@ public class A1
 	public static void main(String args[])  throws IOException
 	{
 		File file = new File(args[0]);									//adds file
+		//File file = new File("lexicalTest.txt");
 		PrintWriter pw = new PrintWriter(System.out);					//Prints formatted representations of objects to a text-output stream
 		StringBuffer sb = new StringBuffer("");							//a string that can be modified
 		BufferedReader br = new BufferedReader(new FileReader(file));	//read char by char

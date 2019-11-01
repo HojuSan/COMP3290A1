@@ -1,23 +1,22 @@
 Hello Dan
 
-For the Case !!!= there was a large amount of debate wether this was 
-1 token as !!!=
-2 tokens as !! !=
-3 tokens as ! ! !=
-I decided to do it as 3 tokens since in the CD19 Lexical structure Grammar print out 
+Hi Dan the feed back I recieved was this
 
-7. Other significant lexical items in CD19 are: semicolon (;) leftbracket ([)
-rightbracket (]) comma (,) leftparen ( ( ) rightparen ( ) ) equals (=) plus (+)
-minus (-) star (*) slash (/) percent (%) carat (^) less (<) greater (>) exclamation
-(!) quote (“) colon (:) dot (.)
+1.Keywords & Idents - youre tokenising of 'FUNC' as TFUNC; the keyword is
+'FUNCTION' (only knocked you 3 marks as this was the subject of a spec
+revision a month ago); 'func' should be tokenised as "TIDNT func". 
 
-Hense I understood this as each time a token can't be completed it is seen as an individual token, 
-not clumped up together since that would require the code to read future tokens which a statemachine 
-cannot do. That was my reasoning
+2.Delimiters& Ops are Good, Numerics & Strings are Good, Errors are good, Comments are
+handled properly. Your output does not pad each token (and token data) to
+multiples of 6, as per spec, thus the output does not line up as expected.
 
-Then my friend sent the email so now it seperates !!!!= into !!! != for those juicy "Bonus points" haha
+3.Strings are not printed as Strings (should be printed within Quotation
+marks). 
 
-Outside that it runs on the school computers and it should run find with a 
-javac A1.java
-into a 
-java A1 test.txt
+4.'TUNDF' should be printed on it own line.
+
+I believe I have addressed each of these issues.
+1. func was changed to function inside token.java
+2. padding was added into the scanner debugPrint function
+3. Strings now print with "" marks
+4. TUNDF errors print on a new line

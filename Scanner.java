@@ -22,6 +22,7 @@ public class Scanner
 	private boolean finished = false;
 	private String outputLimit = "";
 	private int tokenNum = 0;
+	private boolean prevPrint = false;
 	
 	private boolean debug = false;//true;		//if(debug == true){
 	//reserved words to not use
@@ -320,7 +321,7 @@ public class Scanner
 						tokenNum++;
 						buffer = "";
 						debugPrint(foundToken, prevError);
-						foundToken = new Token(Token.TDOT, CR, CP, buffer);
+						foundToken = new Token(Token.TDOT, CR, CP, null);
 						buffer = "";
 					}
 				break;
@@ -552,7 +553,7 @@ public class Scanner
         }
 
 		//concatenate string
-		outputLimit += (foundToken.debugString() +" ");
+		//outputLimit += (foundToken.debugString() +" ");
 
 		debugPrint(foundToken, prevError);
 
@@ -561,42 +562,117 @@ public class Scanner
         //return foundToken;
 	}
 	
+	//new and improved debugPrint
 	public void debugPrint(Token foundToken, boolean prevError)
 	{
-//		System.out.println(temp.toString() +" ");
+		Token sToken;
+		//System.out.println(temp.toString() +" ");
 		//printout format
-		if(foundToken.value() == 62 && prevError == true)
+		//lexical errors
+		if(foundToken.value() == 62)
 		{
-			//System.out.print("case1!!!!!");
-			//if i add a \n to TUNDF it just adds extra space
-			System.out.println("\nTUNDF" +" ");
-			System.out.println("lexical error "+foundToken.getStr());
-			outputLimit = "";
-		}
-		else if(foundToken.value() == 62)
-		{
-			//System.out.println();
+			//System.out.println("outputlimit-["+ outputLimit+"]");
+			// if(outputLimit=="")
+			// {
+			// 	System.out.println();
+			// }
+			if(!prevPrint)
+			{
+				System.out.println();
+			}
 			//System.out.print("case2!!!!!");
-			System.out.println("\nTUNDF" +" ");
+			System.out.println("TUNDF");
 			System.out.println("lexical error "+foundToken.getStr());
-			outputLimit = "";
-		}
-		else if(66 > outputLimit.length() || 60 >= outputLimit.length())
-		{
-			//System.out.print("case3!!!!!");
-			System.out.print(foundToken.debugString() +" ");//+"outputlimit "+outputLimit);//+outputLimit.length());
-			prevError = false;
 
+			outputLimit = "";
+			prevError = false;
+			prevPrint = true;			//just to remove the space
+			//return;
 		}
+//		if(foundToken.value() == 62 && prevError == true)
+//		{
+//			//System.out.print("case1!!!!!");
+//			//if i add a \n to TUNDF it just adds extra space
+//			System.out.println("TUNDF" +" ");
+//			System.out.println("lexical error "+foundToken.getStr());
+//			outputLimit = "";
+//		}
+//		else if(foundToken.value() == 62)
+//		{
+//			//System.out.println();
+//			//System.out.print("case2!!!!!");
+//			System.out.println("\nTUNDF" +" ");
+//			System.out.println("lexical error "+foundToken.getStr());
+//			outputLimit = "";
+//		}
 		else
 		{
-			//System.out.print("case4!!!!!");
-			System.out.println(foundToken.debugString() +" ");
-			//reset the strings
-			outputLimit = "";	
-			prevError = false;
+			// TSTRG token the String
+			if(foundToken.value()==61)
+			{
+				String tokenStr=foundToken.getStr();
+				sToken= new Token(61,foundToken.getLn(),foundToken.getPos(),tokenStr);
+				prevPrint = false;
+
+			}
+			else
+			{
+				
+				sToken = foundToken;
+				prevPrint = false;
+			}
+
+			//System.out.println("\n=======================================outputlimit length: "+outputLimit.length());
+
+			//System.out.println("================"+outputLimit);
+			if (outputLimit.length()>60)
+			{
+				System.out.println("");
+				//System.out.println("-----1-----2-----3-----4-----5-----6-----7-----8-----9-----10");
+				outputLimit = "";			
+				prevPrint = false;
+			}
+			
+			System.out.print(sToken.shortString());
+			outputLimit+=sToken.shortString();
 		}
-	}
+	}	
+//	public void debugPrint(Token foundToken, boolean prevError)
+//	{
+////		System.out.println(temp.toString() +" ");
+//		//printout format
+//		if(foundToken.value() == 62 && prevError == true)
+//		{
+//			//System.out.print("case1!!!!!");
+//			//if i add a \n to TUNDF it just adds extra space
+//			System.out.println("\nTUNDF" +" ");
+//			System.out.println("lexical error "+foundToken.getStr());
+//			outputLimit = "";
+//		}
+//		else if(foundToken.value() == 62)
+//		{
+//			//System.out.println();
+//			//System.out.print("case2!!!!!");
+//			System.out.println("\nTUNDF" +" ");
+//			System.out.println("lexical error "+foundToken.getStr());
+//			outputLimit = "";
+//		}
+//		else if(66 > outputLimit.length() || 60 >= outputLimit.length())
+//		{
+//			//System.out.print("case3!!!!!");
+//			System.out.print(foundToken.debugString() +" ");//+"outputlimit "+outputLimit);//+outputLimit.length());
+//			prevError = false;
+//
+//		}
+//		else
+//		{
+//			//System.out.print("case4!!!!!");
+//			System.out.println(foundToken.debugString() +" ");
+//			//reset the strings
+//			outputLimit = "";	
+//			prevError = false;
+//		}
+//	}
 
 	//getters
 	//end of file check

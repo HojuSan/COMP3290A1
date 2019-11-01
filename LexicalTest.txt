@@ -1,4 +1,6 @@
 /--General purpose test
+khb_dde;; 34./ 42. 32.g 47.
+    tab before #$###  34._ lalala/
 CD19 abc  4-2  (parentheses) def   gh_   j12s 420   21
 340jk what even array[420] ##.  42.# 43.12# 43.1 44.__S
  j8ss !!== <= >>= +=++ +<-= +*= -=- -= *= //=   jnnd  / //  khb_dde;; 34./ 42. 32.g 47.
